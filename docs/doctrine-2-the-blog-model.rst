@@ -339,7 +339,7 @@ Show コントローラアクション
         // Return one entity where 'slug' matches 'symblog-tutorial'
         $em->getRepository('BloggerBlogBundle:Blog')->findOneBySlug('symblog-tutorial');
 
-    次のパートでは、より複雑なクエリーが必要になるので、カスタムリポジトリクラスを作ります。
+    次の章では、より複雑なクエリーが必要になるので、カスタムリポジトリクラスを作ります。
 
 ビュー
 ~~~~~~~~
