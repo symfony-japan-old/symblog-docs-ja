@@ -69,7 +69,7 @@ Symblog の `フランス語版 <http://keiruaprod.fr/symblog-fr/>`_ は、 `Cle
 日本語
 ~~~~~~
 
-Symblog の `日本語版 <http://symblog.ganchiku.com/>`_ は、 `Shin Ohno <https://twitter.com/ganchiku>`_ によって翻訳されました。
+Symblog の `日本語版 <http://symblog.ganchiku.com/>`_ は、 `Shin Ohno <https://twitter.com/ganchiku>`_ によって翻訳されました。日本語翻訳ドキュメントの `ソースリポジトリはこちらです <https://github.com/symfony-japan/symblog-docs-ja>`_ 。
 
 著者
 ------
