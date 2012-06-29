@@ -633,7 +633,7 @@ Doctrine 2 には、 `イベントシステム <http://www.doctrine-project.org/
         }
 
         /**
-         * @ORM\preUpdate
+         * @ORM\PreUpdate
          */
         public function setUpdatedValue()
         {
