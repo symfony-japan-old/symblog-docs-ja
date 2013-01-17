@@ -137,7 +137,7 @@ Doctrine 2 リポジトリ(Repositories)
     
     // src/Blogger/BlogBundle/Entity/Blog.php
     /**
-     * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Repository\BlogRepository")
+     * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
      * @ORM\Table(name="blog")
      * @ORM\HasLifecycleCallbacks()
      */
@@ -152,14 +152,14 @@ Doctrine 2 リポジトリ(Repositories)
 
     $ php app/console doctrine:generate:entities Blogger
     
-Doctrine 2 は、 ``/BlogBundle/Repository/BlogRepository.php`` に ``BlogRepository`` リポジトリのシェルクラスを作成したはずです。
+Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``BlogRepository`` リポジトリのシェルクラスを作成したはずです。
 
 .. code-block:: php
 
     <?php
-    // src/Blogger/BlogBundle/Repository/BlogRepository.php
+    // src/Blogger/BlogBundle/Entity/Repository/BlogRepository.php
     
-    namespace Blogger\BlogBundle\Repository;
+    namespace Blogger\BlogBundle\Entity\Repository;
 
     use Doctrine\ORM\EntityRepository;
 
@@ -179,9 +179,9 @@ Doctrine 2 は、 ``/BlogBundle/Repository/BlogRepository.php`` に ``BlogReposi
 .. code-block:: php
 
     <?php
-    // src/Blogger/BlogBundle/Repository/BlogRepository.php
+    // src/Blogger/BlogBundle/Entity/Repository/BlogRepository.php
 
-    namespace Blogger\BlogBundle\Repository;
+    namespace Blogger\BlogBundle\Entity\Repository;
 
     use Doctrine\ORM\EntityRepository;
 
@@ -261,7 +261,7 @@ Doctrine 2 は、 ``/BlogBundle/Repository/BlogRepository.php`` に ``BlogReposi
     use Doctrine\ORM\Mapping as ORM;
 
     /**
-     * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Repository\CommentRepository")
+     * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\CommentRepository")
      * @ORM\Table(name="comment")
      * @ORM\HasLifecycleCallbacks()
      */
@@ -335,7 +335,7 @@ Doctrine 2 は、 ``/BlogBundle/Repository/BlogRepository.php`` に ``BlogReposi
     use Doctrine\Common\Collections\ArrayCollection;
 
     /**
-     * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Repository\BlogRepository")
+     * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
      * @ORM\Table(name="blog")
      * @ORM\HasLifecycleCallbacks()
      */
@@ -369,7 +369,7 @@ Doctrine 2 は、 ``/BlogBundle/Repository/BlogRepository.php`` に ``BlogReposi
 
     $ php app/console doctrine:generate:entities Blogger
     
-両方のエンティティがアップデートされ、正しいアクセサメソッドを持つようになりました。また、 ``src/Blogger/BlogBundle/Repository/CommentRepository.php`` に ``CommentRepository`` が作成されたことに気づいたでしょうか。このファイルは、メタデータで指定していたため生成されたのです。
+両方のエンティティがアップデートされ、正しいアクセサメソッドを持つようになりました。また、 ``src/Blogger/BlogBundle/Entity/Repository/CommentRepository.php`` に ``CommentRepository`` が作成されたことに気づいたでしょうか。このファイルは、メタデータで指定していたため生成されたのです。
 
 最後にエンティティに行った変更をデータベースに反映させる必要があります。次のように ``doctrine:schema:update`` タスクを使用することもできますが、ここでは Doctrine 2 マイグレーションを紹介しましょう。
 
@@ -666,14 +666,14 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 コメントリポジトリ
 ~~~~~~~~~~~~~~~~~~
 
-``src/Blogger/BlogBundle/Repository/CommentRepository.php`` にある ``CommentRepository`` クラスを開いて次の内容に入れ替えてください。
+``src/Blogger/BlogBundle/Entity/Repository/CommentRepository.php`` にある ``CommentRepository`` クラスを開いて次の内容に入れ替えてください。
 
 .. code-block:: php
 
     <?php
-    // src/Blogger/BlogBundle/Repository/CommentRepository.php
+    // src/Blogger/BlogBundle/Entity/Repository/CommentRepository.php
 
-    namespace Blogger\BlogBundle\Repository;
+    namespace Blogger\BlogBundle\Entity\Repository;
 
     use Doctrine\ORM\EntityRepository;
 
