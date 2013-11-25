@@ -279,7 +279,7 @@ Show コントローラアクション
          */
         public function showAction($id)
         {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $blog = $em->getRepository('BloggerBlogBundle:Blog')->find($id);
 
