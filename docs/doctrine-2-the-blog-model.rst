@@ -435,19 +435,6 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
     GitHub にあるパッケージの現在のバージョンは、以下の場所に配置されます。
     ``vendor/bundles/Symfony/Bundle/DoctrineFixturesBundle``.
 
-次に ``app/autoloader.php`` ファイルを修正して新しいネームスペースを登録します。データフィクスチャ(DataFixtures)も ``Doctrine\Common`` ネームスペース内にあるので、既存の ``Doctrine\Common`` をセットしている場所よりも上に新しいパスを指定する必要があります。ネームスペースは上から順に調べられるので、より特定しているネームスペースは、特定されていないネームスペースよりも前に登録する必要があります。
-
-.. code-block:: php
-
-    // app/autoloader.php
-    // ...
-    $loader->registerNamespaces(array(
-    // ...
-    'Doctrine\\Common\\DataFixtures'    => __DIR__.'/../vendor/doctrine-fixtures/lib',
-    'Doctrine\\Common'                  => __DIR__.'/../vendor/doctrine-common/lib',
-    // ...
-    ));
-
 次に、 ``app/AppKernel.php`` のカーネルに ``DoctrineFixturesBundle`` を登録しましょう。
 
 .. code-block:: php
@@ -457,7 +444,7 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
     {
         $bundles = array(
             // ...
-            new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             // ...
         );
         // ...
