@@ -150,7 +150,7 @@ Doctrine 2 リポジトリ(Repositories)
 
 .. code-block:: bash
 
-    $ php app/console doctrine:generate:entities Blogger
+    $ php app/console doctrine:generate:entities Blogger\BlogBundle
     
 Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``BlogRepository`` リポジトリのシェルクラスを作成したはずです。
 
@@ -263,7 +263,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
     /**
      * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\CommentRepository")
      * @ORM\Table(name="comment")
-     * @ORM\HasLifecycleCallbacks()
+     * @ORM\HasLifecycleCallbacks
      */
     class Comment
     {
@@ -337,7 +337,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
     /**
      * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
      * @ORM\Table(name="blog")
-     * @ORM\HasLifecycleCallbacks()
+     * @ORM\HasLifecycleCallbacks
      */
     class Blog
     {
@@ -367,7 +367,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
 
 .. code-block:: bash
 
-    $ php app/console doctrine:generate:entities Blogger
+    $ php app/console doctrine:generate:entities Blogger\BlogBundle
     
 両方のエンティティがアップデートされ、正しいアクセサメソッドを持つようになりました。また、 ``src/Blogger/BlogBundle/Entity/Repository/CommentRepository.php`` に ``CommentRepository`` が作成されたことに気づいたでしょうか。このファイルは、メタデータで指定していたため生成されたのです。
 
