@@ -494,25 +494,25 @@ Symfony2 のバリデータを使用すると、データのバリデーショ�
 Swift Mailer を設定する
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Swift Mailer は、 Symfony2 の標準ディストリビューションで動作するように設定されています。しかし、送信方法と証明書に関する設定を変更する必要があります。 ``app/config/parameters.ini`` ファイルを開いて、 ``mailer_`` 接頭辞の設定を見てください。
+Swift Mailer は、 Symfony2 の標準ディストリビューションで動作するように設定されています。しかし、送信方法と証明書に関する設定を変更する必要があります。 ``app/config/parameters.yml`` ファイルを開いて、 ``mailer_`` 接頭辞の設定を見てください。
 
 .. code-block:: text
 
-    mailer_transport="smtp"
-    mailer_host="localhost"
-    mailer_user=""
-    mailer_password=""
+    mailer_transport: smtp
+    mailer_host: localhost
+    mailer_user: null
+    mailer_password: null
 
 Swift Mailer はメール送信に関してたくさんの方法を用意しています。 SMTP サーバの使用、sendmail のローカルインストールの使用、 GMail アカウントの使用などです。シンプルさのために GMail アカウントを使用しましょう。パラメターを次のように変更して、 username と password を必要に応じて修正してください。
 
 .. code-block:: text
 
-    mailer_transport="gmail"
-    mailer_encryption="ssl"
-    mailer_auth_mode="login"
-    mailer_host="smtp.gmail.com"
-    mailer_user="your_username"
-    mailer_password="your_password"
+    mailer_transport: gmail
+    mailer_encryption: ssl
+    mailer_auth_mode: login
+    mailer_host: smtp.gmail.com
+    mailer_user: your_username
+    mailer_password: your_password
 
 .. warning::
 
