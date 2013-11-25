@@ -211,7 +211,7 @@ Doctrine 2 アイコンをクリックすると、以下のように、現在の
             {% for tag, weight in tags %}
                 <span class="weight-{{ weight }}">{{ tag }}</span>
             {% else %}
-                <p>There are no tags</p>
+                There are no tags
             {% endfor %}
         </p>
     </section>
@@ -357,7 +357,6 @@ Doctrine 2 アイコンをクリックすると、以下のように、現在の
                     </p>
                 </header>
                 <p>{{ comment.comment }}</p>
-                </p>
             </article>
         {% else %}
             <p>There are no recent comments</p>
