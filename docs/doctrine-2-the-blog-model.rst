@@ -586,14 +586,14 @@ Doctrine 2 には、 `イベントシステム <http://www.doctrine-project.org/
     /**
      * @ORM\Entity
      * @ORM\Table(name="blog")
-     * @ORM\HasLifecycleCallbacks()
+     * @ORM\HasLifecycleCallbacks
      */
     class Blog
     {
         // ..
     }
 
-これで ``Blog`` エンティティにメソッドを追加して ``preUpdate`` イベントを登録するようにしましょう。また、コンストラクタで ``created`` と `updated`` メンバーのデフォルト値もセットしておきます。
+これで ``Blog`` エンティティにメソッドを追加して ``PreUpdate`` イベントを登録するようにしましょう。また、コンストラクタで ``created`` と `updated`` メンバーのデフォルト値もセットしておきます。
 
 .. code-block:: php
 
@@ -605,7 +605,7 @@ Doctrine 2 には、 `イベントシステム <http://www.doctrine-project.org/
     /**
      * @ORM\Entity
      * @ORM\Table(name="blog")
-     * @ORM\HasLifecycleCallbacks()
+     * @ORM\HasLifecycleCallbacks
      */
     class Blog
     {
@@ -618,7 +618,7 @@ Doctrine 2 には、 `イベントシステム <http://www.doctrine-project.org/
         }
 
         /**
-         * @ORM\preUpdate
+         * @ORM\PreUpdate
          */
         public function setUpdatedValue()
         {
