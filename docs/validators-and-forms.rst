@@ -191,11 +191,11 @@
     namespace Blogger\BlogBundle\Form;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilder;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     class EnquiryType extends AbstractType
     {
-        public function buildForm(FormBuilder $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder->add('name');
             $builder->add('email', 'email');
@@ -205,11 +205,11 @@
 
         public function getName()
         {
-            return 'contact';
+            return 'blogger_blogbundle_enquirytype';
         }
     }
 
-``EnquiryType`` クラスは ``FormBuilder`` クラスを受け取り、使用します。 ``FormBuilder`` クラスは、フォーム作成時にとても役に立ちます。フィールドの保持しているメタデータに基づいたフィールドの定義のプロセスを簡単にしてくれます。今回の Enquiry エンティティはとてもシンプルで、まだメタデータを定義していませんので ``FormBuilder`` はデフォルトのテキスト入力をフィールドタイプに使用します。ほとんどのフィールドにテキスト入力は適切ですが、 body フィールドには ``textarea`` を指定したいですし、 email フィールドには HTML5 の email 入力タイプのアドバンテージを享受したいとします。
+``EnquiryType`` クラスは ``FormBuilderInterface`` インターフェイスを受け取り、使用します。 このインターフェイスは ``FormBuilder`` クラスで使用されます。 ``FormBuilder`` クラスは、フォーム作成時にとても役に立ちます。フィールドの保持しているメタデータに基づいたフィールドの定義のプロセスを簡単にしてくれます。今回の Enquiry エンティティはとてもシンプルで、まだメタデータを定義していませんので ``FormBuilder`` はデフォルトのテキスト入力をフィールドタイプに使用します。ほとんどのフィールドにテキスト入力は適切ですが、 body フィールドには ``textarea`` を指定したいですし、 email フィールドには HTML5 の email 入力タイプのアドバンテージを享受したいとします。
 
 .. note::
 
@@ -441,8 +441,7 @@ Symfony2 のバリデータを使用すると、データのバリデーショ�
     use Symfony\Component\Validator\Mapping\ClassMetadata;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Validator\Constraints\Email;
-    use Symfony\Component\Validator\Constraints\MinLength;
-    use Symfony\Component\Validator\Constraints\MaxLength;
+    use Symfony\Component\Validator\Constraints\Length;
 
     class Enquiry
     {
@@ -455,16 +454,20 @@ Symfony2 のバリデータを使用すると、データのバリデーショ�
             $metadata->addPropertyConstraint('email', new Email());
 
             $metadata->addPropertyConstraint('subject', new NotBlank());
-            $metadata->addPropertyConstraint('subject', new MaxLength(50));
+            $metadata->addPropertyConstraint('subject', new Length(array(
+                'max' => 50,
+            )));
 
-            $metadata->addPropertyConstraint('body', new MinLength(50));
+            $metadata->addPropertyConstraint('body', new Length(array(
+                'min' => 50,
+            )));
         }
 
         // ..
 
     }
 
-バリデータを定義するのに、静的メソッド ``loadValidatorMetadata`` を必ず実装してください。このメソッドは ``ClassMetadata`` のオブジェクトを引数で受け取っています。この ``ClassMetadata`` オブジェクトを使用して、エンティティのメンバーにプロパティの制約をセットすることができます。上記の最初の命令文では、 ``NotBlank`` 制約を ``name`` メンバーに適用しています。 ``NotBlank`` はとてもシンプルで、値が空で無ければ ``true`` を返すだけです。次に ``email`` メンバーのバリデーションをセットアップしています。 Symfony2 のバリデータサービスは、 MX レコードまでチェックするドメインチェックを行う  `emails <http://symfony.com/doc/current/reference/constraints/Email.html>`_ のバリデーションを用意しています。 ``subject`` メンバーは ``NotBlank`` と ``MaxLength`` 制約をセットします。このようにメンバーに対しバリデータを好きなだけ適用することができます。
+バリデータを定義するのに、静的メソッド ``loadValidatorMetadata`` を必ず実装してください。このメソッドは ``ClassMetadata`` のオブジェクトを引数で受け取っています。この ``ClassMetadata`` オブジェクトを使用して、エンティティのメンバーにプロパティの制約をセットすることができます。上記の最初の命令文では、 ``NotBlank`` 制約を ``name`` メンバーに適用しています。 ``NotBlank`` はとてもシンプルで、値が空で無ければ ``true`` を返すだけです。次に ``email`` メンバーのバリデーションをセットアップしています。 Symfony2 のバリデータサービスは、 MX レコードまでチェックするドメインチェックを行う  `emails <http://symfony.com/doc/current/reference/constraints/Email.html>`_ のバリデーションを用意しています。 ``subject`` メンバーは ``NotBlank`` と ``Length`` 制約をセットします。このようにメンバーに対しバリデータを好きなだけ適用することができます。
 
 `バリデータ制約 <http://symfony.com/doc/current/reference/constraints.html>`_ の一覧は、 Symfony2 のリファレンスドキュメントを参照してください。また、 `カスタムバリデータを作成する方法 <http://symfony.com/doc/current/cookbook/validation/custom_constraint.html>`_ でも参照することが可能です。
 
@@ -494,25 +497,25 @@ Symfony2 のバリデータを使用すると、データのバリデーショ�
 Swift Mailer を設定する
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Swift Mailer は、 Symfony2 の標準ディストリビューションで動作するように設定されています。しかし、送信方法と証明書に関する設定を変更する必要があります。 ``app/config/parameters.ini`` ファイルを開いて、 ``mailer_`` 接頭辞の設定を見てください。
+Swift Mailer は、 Symfony2 の標準ディストリビューションで動作するように設定されています。しかし、送信方法と証明書に関する設定を変更する必要があります。 ``app/config/parameters.yml`` ファイルを開いて、 ``mailer_`` 接頭辞の設定を見てください。
 
 .. code-block:: text
 
-    mailer_transport="smtp"
-    mailer_host="localhost"
-    mailer_user=""
-    mailer_password=""
+    mailer_transport: smtp
+    mailer_host: localhost
+    mailer_user: null
+    mailer_password: null
 
 Swift Mailer はメール送信に関してたくさんの方法を用意しています。 SMTP サーバの使用、sendmail のローカルインストールの使用、 GMail アカウントの使用などです。シンプルさのために GMail アカウントを使用しましょう。パラメターを次のように変更して、 username と password を必要に応じて修正してください。
 
 .. code-block:: text
 
-    mailer_transport="gmail"
-    mailer_encryption="ssl"
-    mailer_auth_mode="login"
-    mailer_host="smtp.gmail.com"
-    mailer_user="your_username"
-    mailer_password="your_password"
+    mailer_transport: gmail
+    mailer_encryption: ssl
+    mailer_auth_mode: login
+    mailer_host: smtp.gmail.com
+    mailer_user: your_username
+    mailer_password: your_password
 
 .. warning::
 
