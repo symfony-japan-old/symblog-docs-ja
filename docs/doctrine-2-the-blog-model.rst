@@ -406,22 +406,20 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
 データフィクスチャ(Data Fixtures)
 ---------------------------------
 
-フィクスチャを使用して、サンプルデータをデータベースに格納することができます。そのために、 Doctrine フィクスチャのエクステンションとバンドルを使用します。 Doctrine フィクスチャ の エクステンションとバンドルは、 Symfony2 の標準ディストリビューションには付いてきませんので、手動でインストールする必要があります。幸運にもこれはとても簡単です。プロジェクトのルートディレクトリにある ``deps`` ファイルを開き、以下のように Doctrine フィクスチャのエクステンションとバンドルを追加してください。
+フィクスチャを使用して、サンプルデータをデータベースに格納することができます。そのために、 Doctrine フィクスチャのエクステンションとバンドルを使用します。 Doctrine フィクスチャ の エクステンションとバンドルは、 Symfony2 の標準ディストリビューションには付いてきませんので、手動でインストールする必要があります。幸運にもこれはとても簡単です。プロジェクトのルートディレクトリにある ``composer.json`` ファイルを開き、以下のように Doctrine フィクスチャのエクステンションとバンドルを追加してください。
 
-.. code-block:: text
+.. code-block:: php
 
-    [doctrine-fixtures]
-        git=http://github.com/doctrine/data-fixtures.git
-
-    [DoctrineFixturesBundle]
-        git=http://github.com/doctrine/DoctrineFixturesBundle.git
-        target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+    "require": {
+        "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "doctrine/data-fixtures" : "dev-master"
+    }
 
 次のタスクを実行して、この変更をベンダーに反映させましょう。
 
 .. code-block:: bash
 
-    $ php bin/vendors install
+    $ php composer.phar update
 
 このタスクを実行すると、それぞれの Github リポジトリから最新版をダウンロードして、正しい場所にインストールします。
 
