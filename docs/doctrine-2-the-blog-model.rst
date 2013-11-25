@@ -16,7 +16,7 @@ Doctrine 2: モデル
     ORM に関して詳しくない方には、ここで ORM の原理の基本を説明しましょう。 ORM の定義に関しては、 `Wikipedia <http://en.wikipedia.org/wiki/Object-relational_mapping>`_ を参照してくだい。
 
     コンピュータソフトウェアにおける "Object-relational mapping (ORM, O/RM, または O/R mapping) は、プログラミングのテクニックの１つで、オブジェクト指向プログラミングにおける不適合なシステム間におけるデータ変換を行います。 ORM は、実際にプログラミング言語から使用可能な"仮想的な オブジェクトデータベース"を作成します。"
-    
+
     ORM は、 MySQL などのリレーショナルデータベースのデータを、操作しやすいように PHP オブジェクトに変換する手助けをします。このことによってクラス内でテーブルで必要な機能をカプセル化することができます。ユーザテーブルを考えてみてください。おそらく username, password, first_name, last_name, email などのフィールドがあることでしょう。 ORM を使用すれば、これらは、 username,  password,  first_name などのメンバーを持つクラスになり、 ``getUsername()``, ``setPassword()`` などのメソッドを呼び出すことが可能になります。 ORM の利点は、これだけではありません。関連するテーブルを検索する際に、ユーザオブジェクトの検索と同時、または、遅延して検索、と選択することもできます。例えば、 user には 関連した friends があったとします。フレンドテーブルがあり、ユーザテーブルのプライマリーキーを格納しています。 ORM を使用すると、 ``$user->getFriends()`` メソッドなどを呼び出し、 friends テーブルのオブジェクトを検索することができます。さらに ORM は、データを永続化することができますので、 PHP オブジェクトを作成して ``save()`` メソッド等を呼べば データをデータベースに永続化することができます。今回は、 Doctrine 2 ORM ライブラリを使用しますので、このチュートリアルを通して ORM の理解が進むことでしょう。
 
 .. note::
@@ -101,7 +101,7 @@ Doctrine 2: モデル
         protected $blog;
 
         /**
-         * @ORM\Column(type="string", length="20")
+         * @ORM\Column(type="string", length=20)
          */
         protected $image;
 
@@ -279,7 +279,7 @@ Show コントローラアクション
          */
         public function showAction($id)
         {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $blog = $em->getRepository('BloggerBlogBundle:Blog')->find($id);
 
@@ -320,7 +320,7 @@ Show コントローラアクション
         {
             // ..
         }
-    
+
     両方とも同じことを行います。コントローラが、ヘルパークラスである ``Symfony\Bundle\FrameworkBundle\Controller\Controller`` を拡張しなければ、最初の方法を使用することはできません。
 
 次に、データベースから ``Blog`` エンティティを検索する必要があります。まず ``Symfony\Bundle\FrameworkBundle\Controller\Controller`` クラスのヘルパーメソッドを使用し Doctrine 2 のエンティティマネージャを取得します。 `エンティティマネージャ <http://www.doctrine-project.org/docs/orm/2.0/en/reference/working-with-objects.html>`_ は、データベースからオブジェクトを検索したり、永続化したりする処理を行います。今回は、 ``エンティティマネージャ`` オブジェクトを使用して ``BloggerBlogBundle:Blog`` エンティティの Doctrine 2  ``リポジトリ`` を取得します。この ``BloggerBlogBundle:Blog`` シンタックスは、 Doctrine 2 で使用することのできるショートカットで、 ``Blogger\BlogBundle\Entity\Blog`` のようにエンティティの名前をフルで書く代わりに使用しています。リポジトリオブジェクトでは、 ``$id`` 引数を渡して ``find()`` メソッドを呼び出します。このメソッドは、プライマリーキーでオブジェクトを検索します。
@@ -347,7 +347,7 @@ Show コントローラアクション
 これで ``Blog`` コントローラに ``show`` アクションを組み込みましたので、 ``Blog`` エンティティの表示にフォーカスすることができます。 ``show`` アクションでテンプレートを指定しているので、 ``BloggerBlogBundle:Blog:show.html.twig`` がレンダリングされることになります。 ``src/Blogger/BlogBundle/Resouces/views/Blog/show.html.twig`` ファイルを新しく作成し、次の内容をペーストしてください。
 
 .. code-block:: html
-    
+
     {# src/Blogger/BlogBundle/Resouces/views/Blog/show.html.twig #}
     {% extends 'BloggerBlogBundle::layout.html.twig' %}
 
@@ -406,49 +406,23 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
 データフィクスチャ(Data Fixtures)
 ---------------------------------
 
-フィクスチャを使用して、サンプルデータをデータベースに格納することができます。そのために、 Doctrine フィクスチャのエクステンションとバンドルを使用します。 Doctrine フィクスチャ の エクステンションとバンドルは、 Symfony2 の標準ディストリビューションには付いてきませんので、手動でインストールする必要があります。幸運にもこれはとても簡単です。プロジェクトのルートディレクトリにある ``deps`` ファイルを開き、以下のように Doctrine フィクスチャのエクステンションとバンドルを追加してください。
+フィクスチャを使用して、サンプルデータをデータベースに格納することができます。そのために、 Doctrine フィクスチャのエクステンションとバンドルを使用します。 Doctrine フィクスチャ の エクステンションとバンドルは、 Symfony2 の標準ディストリビューションには付いてきませんので、手動でインストールする必要があります。幸運にもこれはとても簡単です。プロジェクトのルートディレクトリにある ``composer.json`` ファイルを開き、以下のように Doctrine フィクスチャのエクステンションとバンドルを追加してください。
 
-.. code-block:: text
+.. code-block:: php
 
-    [doctrine-fixtures]
-        git=http://github.com/doctrine/data-fixtures.git
-
-    [DoctrineFixturesBundle]
-        git=http://github.com/symfony/DoctrineFixturesBundle.git
-        target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+    "require": {
+        // ...
+        "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "doctrine/data-fixtures" : "dev-master"
+    }
 
 次のタスクを実行して、この変更をベンダーに反映させましょう。
 
 .. code-block:: bash
 
-    $ php bin/vendors install
+    $ php composer.phar update
 
 このタスクを実行すると、それぞれの Github リポジトリから最新版をダウンロードして、正しい場所にインストールします。
-
-.. note::
-
-    Git がインストールされていないマシンを使用しているのであれば、エクステンションとバンドルを手動でダウンロードしインストールする必要があります。
-
-    doctrine-fixtures extension: `ダウンロード <https://github.com/doctrine/data-fixtures>`__
-    GitHub にあるパッケージの現在のバージョンは、以下の場所に配置されます。
-    ``vendor/doctrine-fixtures``.
-
-    DoctrineFixturesBundle: `Download <https://github.com/symfony/DoctrineFixturesBundle>`__
-    GitHub にあるパッケージの現在のバージョンは、以下の場所に配置されます。
-    ``vendor/bundles/Symfony/Bundle/DoctrineFixturesBundle``.
-
-次に ``app/autoloader.php`` ファイルを修正して新しいネームスペースを登録します。データフィクスチャ(DataFixtures)も ``Doctrine\Common`` ネームスペース内にあるので、既存の ``Doctrine\Common`` をセットしている場所よりも上に新しいパスを指定する必要があります。ネームスペースは上から順に調べられるので、より特定しているネームスペースは、特定されていないネームスペースよりも前に登録する必要があります。
-
-.. code-block:: php
-
-    // app/autoloader.php
-    // ...
-    $loader->registerNamespaces(array(
-    // ...
-    'Doctrine\\Common\\DataFixtures'    => __DIR__.'/../vendor/doctrine-fixtures/lib',
-    'Doctrine\\Common'                  => __DIR__.'/../vendor/doctrine-common/lib',
-    // ...
-    ));
 
 次に、 ``app/AppKernel.php`` のカーネルに ``DoctrineFixturesBundle`` を登録しましょう。
 
@@ -459,7 +433,7 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
     {
         $bundles = array(
             // ...
-            new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle(),
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             // ...
         );
         // ...
@@ -474,13 +448,13 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
 
     <?php
     // src/Blogger/BlogBundle/DataFixtures/ORM/BlogFixtures.php
-    
+
     namespace Blogger\BlogBundle\DataFixtures\ORM;
-    
+
     use Doctrine\Common\DataFixtures\FixtureInterface;
     use Doctrine\Common\Persistence\ObjectManager;
     use Blogger\BlogBundle\Entity\Blog;
-    
+
     class BlogFixtures implements FixtureInterface
     {
         public function load(ObjectManager $manager)
@@ -494,7 +468,7 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
             $blog1->setCreated(new \DateTime());
             $blog1->setUpdated($blog1->getCreated());
             $manager->persist($blog1);
-    
+
             $blog2 = new Blog();
             $blog2->setTitle('The pool on the roof must have a leak');
             $blog2->setBlog('Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Na. Cras elementum molestie vestibulum. Morbi id quam nisl. Praesent hendrerit, orci sed elementum lobortis.');
@@ -504,7 +478,7 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
             $blog2->setCreated(new \DateTime("2011-07-23 06:12:33"));
             $blog2->setUpdated($blog2->getCreated());
             $manager->persist($blog2);
-    
+
             $blog3 = new Blog();
             $blog3->setTitle('Misdirection. What the eyes see and the ears hear, the mind believes');
             $blog3->setBlog('Lorem ipsumvehicula nunc non leo hendrerit commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque.');
@@ -514,7 +488,7 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
             $blog3->setCreated(new \DateTime("2011-07-16 16:14:06"));
             $blog3->setUpdated($blog3->getCreated());
             $manager->persist($blog3);
-    
+
             $blog4 = new Blog();
             $blog4->setTitle('The grid - A digital frontier');
             $blog4->setBlog('Lorem commodo. Vestibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque. Nulla consectetur tempus nisl vitae viverra.');
@@ -524,7 +498,7 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
             $blog4->setCreated(new \DateTime("2011-06-02 18:54:12"));
             $blog4->setUpdated($blog4->getCreated());
             $manager->persist($blog4);
-    
+
             $blog5 = new Blog();
             $blog5->setTitle('You\'re either a one or a zero. Alive or dead');
             $blog5->setBlog('Lorem ipsum dolor sit amet, consectetur adipiscing elittibulum vulputate mauris eget erat congue dapibus imperdiet justo scelerisque.');
@@ -534,10 +508,10 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
             $blog5->setCreated(new \DateTime("2011-04-25 15:34:18"));
             $blog5->setUpdated($blog5->getCreated());
             $manager->persist($blog5);
-    
+
             $manager->flush();
         }
-    
+
     }
 
 このフィクスチャファイルは、 Doctrine 2 を使う上で、たくさんの重要な機能を説明します。データベースにエンティティを永続化する方法に関してもです。
@@ -601,14 +575,14 @@ Doctrine 2 には、 `イベントシステム <http://www.doctrine-project.org/
     /**
      * @ORM\Entity
      * @ORM\Table(name="blog")
-     * @ORM\HasLifecycleCallbacks()
+     * @ORM\HasLifecycleCallbacks
      */
     class Blog
     {
         // ..
     }
 
-これで ``Blog`` エンティティにメソッドを追加して ``preUpdate`` イベントを登録するようにしましょう。また、コンストラクタで ``created`` と `updated`` メンバーのデフォルト値もセットしておきます。
+これで ``Blog`` エンティティにメソッドを追加して ``PreUpdate`` イベントを登録するようにしましょう。また、コンストラクタで ``created`` と `updated`` メンバーのデフォルト値もセットしておきます。
 
 .. code-block:: php
 
@@ -620,7 +594,7 @@ Doctrine 2 には、 `イベントシステム <http://www.doctrine-project.org/
     /**
      * @ORM\Entity
      * @ORM\Table(name="blog")
-     * @ORM\HasLifecycleCallbacks()
+     * @ORM\HasLifecycleCallbacks
      */
     class Blog
     {
@@ -633,7 +607,7 @@ Doctrine 2 には、 `イベントシステム <http://www.doctrine-project.org/
         }
 
         /**
-         * @ORM\preUpdate
+         * @ORM\PreUpdate
          */
         public function setUpdatedValue()
         {
