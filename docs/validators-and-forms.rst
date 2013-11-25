@@ -441,8 +441,7 @@ Symfony2 のバリデータを使用すると、データのバリデーショ�
     use Symfony\Component\Validator\Mapping\ClassMetadata;
     use Symfony\Component\Validator\Constraints\NotBlank;
     use Symfony\Component\Validator\Constraints\Email;
-    use Symfony\Component\Validator\Constraints\MinLength;
-    use Symfony\Component\Validator\Constraints\MaxLength;
+    use Symfony\Component\Validator\Constraints\Length;
 
     class Enquiry
     {
@@ -455,16 +454,20 @@ Symfony2 のバリデータを使用すると、データのバリデーショ�
             $metadata->addPropertyConstraint('email', new Email());
 
             $metadata->addPropertyConstraint('subject', new NotBlank());
-            $metadata->addPropertyConstraint('subject', new MaxLength(50));
+            $metadata->addPropertyConstraint('subject', new Length(array(
+                'max' => 50,
+            )));
 
-            $metadata->addPropertyConstraint('body', new MinLength(50));
+            $metadata->addPropertyConstraint('body', new Length(array(
+                'min' => 50,
+            )));
         }
 
         // ..
 
     }
 
-バリデータを定義するのに、静的メソッド ``loadValidatorMetadata`` を必ず実装してください。このメソッドは ``ClassMetadata`` のオブジェクトを引数で受け取っています。この ``ClassMetadata`` オブジェクトを使用して、エンティティのメンバーにプロパティの制約をセットすることができます。上記の最初の命令文では、 ``NotBlank`` 制約を ``name`` メンバーに適用しています。 ``NotBlank`` はとてもシンプルで、値が空で無ければ ``true`` を返すだけです。次に ``email`` メンバーのバリデーションをセットアップしています。 Symfony2 のバリデータサービスは、 MX レコードまでチェックするドメインチェックを行う  `emails <http://symfony.com/doc/current/reference/constraints/Email.html>`_ のバリデーションを用意しています。 ``subject`` メンバーは ``NotBlank`` と ``MaxLength`` 制約をセットします。このようにメンバーに対しバリデータを好きなだけ適用することができます。
+バリデータを定義するのに、静的メソッド ``loadValidatorMetadata`` を必ず実装してください。このメソッドは ``ClassMetadata`` のオブジェクトを引数で受け取っています。この ``ClassMetadata`` オブジェクトを使用して、エンティティのメンバーにプロパティの制約をセットすることができます。上記の最初の命令文では、 ``NotBlank`` 制約を ``name`` メンバーに適用しています。 ``NotBlank`` はとてもシンプルで、値が空で無ければ ``true`` を返すだけです。次に ``email`` メンバーのバリデーションをセットアップしています。 Symfony2 のバリデータサービスは、 MX レコードまでチェックするドメインチェックを行う  `emails <http://symfony.com/doc/current/reference/constraints/Email.html>`_ のバリデーションを用意しています。 ``subject`` メンバーは ``NotBlank`` と ``Length`` 制約をセットします。このようにメンバーに対しバリデータを好きなだけ適用することができます。
 
 `バリデータ制約 <http://symfony.com/doc/current/reference/constraints.html>`_ の一覧は、 Symfony2 のリファレンスドキュメントを参照してください。また、 `カスタムバリデータを作成する方法 <http://symfony.com/doc/current/cookbook/validation/custom_constraint.html>`_ でも参照することが可能です。
 
