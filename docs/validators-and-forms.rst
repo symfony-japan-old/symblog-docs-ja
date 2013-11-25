@@ -191,11 +191,11 @@
     namespace Blogger\BlogBundle\Form;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilder;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     class EnquiryType extends AbstractType
     {
-        public function buildForm(FormBuilder $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder->add('name');
             $builder->add('email', 'email');
@@ -209,7 +209,7 @@
         }
     }
 
-``EnquiryType`` クラスは ``FormBuilder`` クラスを受け取り、使用します。 ``FormBuilder`` クラスは、フォーム作成時にとても役に立ちます。フィールドの保持しているメタデータに基づいたフィールドの定義のプロセスを簡単にしてくれます。今回の Enquiry エンティティはとてもシンプルで、まだメタデータを定義していませんので ``FormBuilder`` はデフォルトのテキスト入力をフィールドタイプに使用します。ほとんどのフィールドにテキスト入力は適切ですが、 body フィールドには ``textarea`` を指定したいですし、 email フィールドには HTML5 の email 入力タイプのアドバンテージを享受したいとします。
+``EnquiryType`` クラスは ``FormBuilderInterface`` インターフェイスを受け取り、使用します。 このインターフェイスは ``FormBuilder`` クラスで使用されます。 ``FormBuilder`` クラスは、フォーム作成時にとても役に立ちます。フィールドの保持しているメタデータに基づいたフィールドの定義のプロセスを簡単にしてくれます。今回の Enquiry エンティティはとてもシンプルで、まだメタデータを定義していませんので ``FormBuilder`` はデフォルトのテキスト入力をフィールドタイプに使用します。ほとんどのフィールドにテキスト入力は適切ですが、 body フィールドには ``textarea`` を指定したいですし、 email フィールドには HTML5 の email 入力タイプのアドバンテージを享受したいとします。
 
 .. note::
 
