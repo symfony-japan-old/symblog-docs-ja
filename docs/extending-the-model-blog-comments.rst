@@ -26,19 +26,19 @@
         {
             $em = $this->getDoctrine()
                        ->getEntityManager();
-    
+
             $blogs = $em->createQueryBuilder()
                         ->select('b')
                         ->from('BloggerBlogBundle:Blog',  'b')
                         ->addOrderBy('b.created', 'DESC')
                         ->getQuery()
                         ->getResult();
-    
+
             return $this->render('BloggerBlogBundle:Page:index.html.twig', array(
                 'blogs' => $blogs
             ));
         }
-        
+
         // ..
     }
 
@@ -50,7 +50,7 @@
 これで ``Blog`` エンティティのコレクションが手に入りましたので、その内容を表示しましょう。ホームページのテンプレート ``src/Blogger/BlogBundle/Resources/views/Page/index.html.twig`` を次の内容に修正してください。
 
 .. code-block:: html
-    
+
     {# src/Blogger/BlogBundle/Resources/views/Page/index.html.twig #}
     {% extends 'BloggerBlogBundle::layout.html.twig' %}
 
@@ -61,13 +61,13 @@
                 <header>
                     <h2><a href="{{ path('BloggerBlogBundle_blog_show', { 'id': blog.id }) }}">{{ blog.title }}</a></h2>
                 </header>
-        
+
                 <img src="{{ asset(['images/', blog.image]|join) }}" />
                 <div class="snippet">
                     <p>{{ blog.blog(500) }}</p>
                     <p class="continue"><a href="{{ path('BloggerBlogBundle_blog_show', { 'id': blog.id }) }}">Continue reading...</a></p>
                 </div>
-        
+
                 <footer class="meta">
                     <p>Comments: -</p>
                     <p>Posted by <span class="highlight">{{blog.author}}</span> at {{ blog.created|date('h:iA') }}</p>
@@ -95,9 +95,9 @@
 Twig の ``for..else..endfor`` 制御構造は、この作業をよりクリーンにすることができます。ホームページテンプレートのコードのほとんどは、 HTML でブログの内容を出力することに携わっています。しかし、いくつか言及しておくことがあります。まず Twig の ``path`` 関数を使用して、ブログの show ページへのルートを生成しています。ブログの show ページは、 URL にブログ ``ID`` を使用していますので、 ``path`` 関数に引数として渡す必要があります。これは、次のようにします。
 
 .. code-block:: html
-    
+
     <h2><a href="{{ path('BloggerBlogBundle_blog_show', { 'id': blog.id }) }}">{{ blog.title }}</a></h2>
-    
+
 次に、 ``<p>{{ blog.blog(500) }}</p>`` を使用してブログの内容を出力します。ここで渡した ``500`` という引数で、ブログエントリの内容の長さを指定しています。これを実際に動かすためには、前に Doctrine 2 のタスクで生成した ``getBlog`` メソッドを修正する必要があります。 ``src/Blogger/BlogBundle/Entity/Blog.php`` にある ``Blog`` エンティティの ``getBLog`` を次のように修正してください。
 
 .. code-block:: php
@@ -134,7 +134,7 @@ Doctrine 2 リポジトリ(Repositories)
 
 
 .. code-block:: php
-    
+
     // src/Blogger/BlogBundle/Entity/Blog.php
     /**
      * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
@@ -151,14 +151,14 @@ Doctrine 2 リポジトリ(Repositories)
 .. code-block:: bash
 
     $ php app/console doctrine:generate:entities Blogger\BlogBundle
-    
+
 Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``BlogRepository`` リポジトリのシェルクラスを作成したはずです。
 
 .. code-block:: php
 
     <?php
     // src/Blogger/BlogBundle/Entity/Repository/BlogRepository.php
-    
+
     namespace Blogger\BlogBundle\Entity\Repository;
 
     use Doctrine\ORM\EntityRepository;
@@ -210,7 +210,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
 最新のブログエントリを取得するコントローラの ``QueryBuilder`` コードと同じ動作をする ``getLatestBlogs`` メソッドを作成しました。リポジトリクラスでは、 ``createQueryBuilder()`` メソッドを介して ``QueryBuilder`` へ直接アクセスすることができます。また、検索結果の最大値を指定できるように ``$limit`` パラメータも追加しました。クエリーの結果は、コントローラ内のときと同じになります。 ``from()`` メソッドでエンティティを指定する必要がなくなったことに気づいたかもしれません。 ``BlogRepository`` は、 ``Blog`` エンティティと関連付けられているので、必要なくなったのです。 ``EntityRepository`` クラスの ``createQueryBuilder`` メソッドの実装を見てみると、次のように ``from()`` メソッドを呼んでいるのが確認できます。
 
 .. code-block:: php
-    
+
     // Doctrine\ORM\EntityRepository
     public function createQueryBuilder($alias)
     {
@@ -230,15 +230,15 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
         {
             $em = $this->getDoctrine()
                        ->getEntityManager();
-                       
+
             $blogs = $em->getRepository('BloggerBlogBundle:Blog')
                         ->getLatestBlogs();
-                       
+
             return $this->render('BloggerBlogBundle:Page:index.html.twig', array(
                 'blogs' => $blogs
             ));
         }
-        
+
         // ..
     }
 
@@ -288,7 +288,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
          * @ORM\Column(type="boolean")
          */
         protected $approved;
-        
+
         /**
          * @ORM\ManyToOne(targetEntity="Blog", inversedBy="comments")
          * @ORM\JoinColumn(name="blog_id", referencedColumnName="id")
@@ -309,7 +309,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
         {
             $this->setCreated(new \DateTime());
             $this->setUpdated(new \DateTime());
-            
+
             $this->setApproved(true);
         }
 
@@ -342,22 +342,22 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
     class Blog
     {
         // ..
-        
+
         /**
          * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog")
          */
         protected $comments;
-        
+
         // ..
-        
+
         public function __construct()
         {
             $this->comments = new ArrayCollection();
-            
+
             $this->setCreated(new \DateTime());
             $this->setUpdated(new \DateTime());
         }
-        
+
         // ..
     }
 
@@ -368,7 +368,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
 .. code-block:: bash
 
     $ php app/console doctrine:generate:entities Blogger\BlogBundle
-    
+
 両方のエンティティがアップデートされ、正しいアクセサメソッドを持つようになりました。また、 ``src/Blogger/BlogBundle/Entity/Repository/CommentRepository.php`` に ``CommentRepository`` が作成されたことに気づいたでしょうか。このファイルは、メタデータで指定していたため生成されたのです。
 
 最後にエンティティに行った変更をデータベースに反映させる必要があります。次のように ``doctrine:schema:update`` タスクを使用することもできますが、ここでは Doctrine 2 マイグレーションを紹介しましょう。
@@ -383,7 +383,7 @@ Doctrine 2 マイグレーション(Migrations)
 Doctrine2 マイグレーションエクステンションとバンドルは、 Symfony2 の標準ディストリビューションでは付いてこないので、 DataFixtures エクステンションとバンドルをインストールしたときのように手動でインストールする必要があります。プロジェクトルートの ``composer.json`` ファイルを開いて、次のように Doctrine 2 マイグレーションとバンドルを追加してください。
 
 .. code-block:: php
-    
+
     "require": {
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/migrations": "dev-master"
@@ -396,18 +396,6 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
     $ php composer.phar update
 
 このタスクを実行すると、それぞれの Github リポジトリから最新のバージョンをダウンロードして、正しい場所にインストールします。
-
-.. note::
-
-    Git がインストールされていないマシンを使用しているのであれば、エクステンションとバンドルを手動でダウンロードしインストールする必要があります。
-
-    doctrine-migrations extension: `ダウンロード <http://github.com/doctrine/migrations>`__
-    GitHub にあるパッケージの現在のバージョンは、以下の場所に配置されます。
-    ``vendor/doctrine-migrations``.
-
-    DoctrineMigrationsBundle: `ダウンロード <http://github.com/symfony/DoctrineMigrationsBundle>`__
-    GitHub にあるパッケージの現在のバージョンは、以下の場所に配置されます。
-    ``vendor/bundles/Symfony/Bundle/DoctrineMigrationsBundle``.
 
 次に、 ``app/AppKernel.php`` のカーネルにバンドルを登録しましょう。
 
@@ -424,10 +412,6 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
         // ...
     }
 
-.. warning::
-
-    Doctrine 2 マイグレーションライブラリは、まだアルファ版状態なので、現時点で本番サーバに使用するのはお勧めしません。
-
 これでエンティティの変更をデータベースに反映させる準備ができました。これには、２つのステップがあります。まず、 Doctrine 2 のマイグレーションに現在のデータベーススキーマとエンティティ間の違いを調べさせマイグレーションファイルを作成します。これは ``doctrine:migrations:diff`` タスクで行います。次に実際にこのマイグレーションファイルを元にマイグレーションを実行します。これは ``doctrine:migrations:migrate`` タスクで行います。
 
 次の２つのタスクを実行してデータベーススキーマを修正しましょう。
@@ -442,15 +426,15 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. note::
 
     データベースに新しく ``migration_versions`` という名前のテーブルが作成されたことに気づいたでしょうか。このテーブルにはマイグレーションのバージョンナンバーが格納されます。ですので、データベースの現在のバージョンを調べることができます。
-   
+
 .. tip::
 
     Doctrine 2 マイグレーションは、プログラムで本番データベースの変更をするので、とても良い方法です。つまり、このタスクを開発スクリプトに統合することができるので、アプリケーションの新しいリリースをデプロイする際に自動的にデータベースがアップデートされるのです。また、 Doctrine 2 マイグレーションは全てのマイグレーションで行った変更を ``up`` と ``down`` メソッドを用いてロールバックすることができます。前のバージョンにロールバックするには、ロールバックしたいバージョンナンバーを指定して次のタスクを使用してください。
-    
+
     .. code-block:: bash
-    
+
         $ php app/console doctrine:migrations:migrate 20110806183439
-        
+
 データフィクスチャ: 修正版
 --------------------------
 
@@ -502,15 +486,15 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 
     <?php
     // src/Blogger/BlogBundle/DataFixtures/ORM/CommentFixtures.php
-    
+
     namespace Blogger\BlogBundle\DataFixtures\ORM;
-    
+
     use Doctrine\Common\DataFixtures\AbstractFixture;
     use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
     use Doctrine\Common\Persistence\ObjectManager;
     use Blogger\BlogBundle\Entity\Comment;
     use Blogger\BlogBundle\Entity\Blog;
-    
+
     class CommentFixtures extends AbstractFixture implements OrderedFixtureInterface
     {
         public function load(ObjectManager $manager)
@@ -520,115 +504,115 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
             $comment->setComment('To make a long story short. You can\'t go wrong by choosing Symfony! And no one has ever been fired for using Symfony.');
             $comment->setBlog($manager->merge($this->getReference('blog-1')));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('David');
             $comment->setComment('To make a long story short. Choosing a framework must not be taken lightly; it is a long-term commitment. Make sure that you make the right selection!');
             $comment->setBlog($manager->merge($this->getReference('blog-1')));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Dade');
             $comment->setComment('Anything else, mom? You want me to mow the lawn? Oops! I forgot, New York, No grass.');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Kate');
             $comment->setComment('Are you challenging me? ');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-23 06:15:20"));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Dade');
             $comment->setComment('Name your stakes.');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-23 06:18:35"));
             $manager->persist($comment);
-            
+
             $comment = new Comment();
             $comment->setUser('Kate');
             $comment->setComment('If I win, you become my slave.');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-23 06:22:53"));
             $manager->persist($comment);
-            
+
             $comment = new Comment();
             $comment->setUser('Dade');
             $comment->setComment('Your SLAVE?');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-23 06:25:15"));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Kate');
             $comment->setComment('You wish! You\'ll do shitwork, scan, crack copyrights...');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-23 06:46:08"));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Dade');
             $comment->setComment('And if I win?');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-23 10:22:46"));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Kate');
             $comment->setComment('Make it my first-born!');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-23 11:08:08"));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Dade');
             $comment->setComment('Make it our first-date!');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-24 18:56:01"));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Kate');
             $comment->setComment('I don\'t DO dates. But I don\'t lose either, so you\'re on!');
             $comment->setBlog($manager->merge($this->getReference('blog-2')));
             $comment->setCreated(new \DateTime("2011-07-25 22:28:42"));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Stanley');
             $comment->setComment('It\'s not gonna end like this.');
             $comment->setBlog($manager->merge($this->getReference('blog-3')));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Gabriel');
             $comment->setComment('Oh, come on, Stan. Not everything ends the way you think it should. Besides, audiences love happy endings.');
             $comment->setBlog($manager->merge($this->getReference('blog-3')));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Mile');
             $comment->setComment('Doesn\'t Bill Gates have something like that?');
             $comment->setBlog($manager->merge($this->getReference('blog-5')));
             $manager->persist($comment);
-    
+
             $comment = new Comment();
             $comment->setUser('Gary');
             $comment->setComment('Bill Who?');
             $comment->setBlog($manager->merge($this->getReference('blog-5')));
             $manager->persist($comment);
-    
+
             $manager->flush();
         }
-    
+
         public function getOrder()
         {
             return 2;
         }
     }
-        
+
 ``BlogFixtures`` クラスにした変更と同じように、 ``CommentFixtures`` クラスも ``AbstractFixture`` クラスを拡張して ``OrderedFixtureInterface`` を実装します。つまり、 ``getOrder()`` メソッドを実装する必要があるということです。このクラスでは、 2 を返すようにして、ブログフィクスチャよりも後に読み込ませるようにします。
 
 予め作成しておいた ``Blog`` エンティティへのリファレンス方法は、次のようになりました。
@@ -642,7 +626,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. code-block:: bash
 
     $ php app/console doctrine:fixtures:load
-    
+
 コメントの表示
 --------------
 
@@ -677,18 +661,18 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
                        ->where('c.blog = :blog_id')
                        ->addOrderBy('c.created')
                        ->setParameter('blog_id', $blogId);
-            
+
             if (false === is_null($approved))
                 $qb->andWhere('c.approved = :approved')
                    ->setParameter('approved', $approved);
-                   
+
             return $qb->getQuery()
                       ->getResult();
         }
     }
-    
+
 このメソッドは、あるブログエントリに関連しているコメントを検索します。クエリーに where 節を加えてください。 where 節は、パラメータ呼び出しを使用しており、 ``setParameter()`` メソッドで指定します。次のようにクエリーに直接値をセットするのではなく、常にパラメータを使用するようにしてください。
-    
+
 .. code-block:: php
 
     ->where('c.blog = ' . blogId)
@@ -701,9 +685,9 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 次に ``Blog`` コントローラの ``show`` アクションでそのブログエントリのコメントを検索するように、修正する必要があります。 ``src/Blogger/BlogBundle/Controller/BlogController.php`` の ``Blog`` コントローラを次のように修正してください。
 
 .. code-block:: php
-    
+
     // src/Blogger/BlogBundle/Controller/BlogController.php
-    
+
     public function showAction($id)
     {
         // ..
@@ -711,10 +695,10 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
         if (!$blog) {
             throw $this->createNotFoundException('Unable to find Blog post.');
         }
-        
+
         $comments = $em->getRepository('BloggerBlogBundle:Comment')
                        ->getCommentsForBlog($blog->getId());
-        
+
         return $this->render('BloggerBlogBundle:Blog:show.html.twig', array(
             'blog'      => $blog,
             'comments'  => $comments
@@ -731,12 +715,12 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. code-block:: html
 
     {# src/Blogger/BlogBundle/Resources/views/Blog/show.html.twig #}
-    
+
     {# .. #}
-    
+
     {% block body %}
         {# .. #}
-    
+
         <section class="comments" id="comments">
             <section class="previous-comments">
                 <h3>Comments</h3>
@@ -744,7 +728,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
             </section>
         </section>
     {% endblock %}
-    
+
 上記のテンプレートには、新しい Twig のタグ ``include`` があります。このタグは  ``BloggerBlogBundle:Comment:index.html.twig`` で指定したテンプレートの内容をインクルードします。また、そのテンプレートには何個でも引数を渡すことができます。今回のケースでは、レンダリングすべき ``Comment`` エンティティのコレクションを渡しています。
 
 コメント show テンプレート
@@ -755,7 +739,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. code-block:: html
 
     {# src/Blogger/BlogBundle/Resources/views/Comment/index.html.twig #}
-    
+
     {% for comment in comments %}
         <article class="comment {{ cycle(['odd', 'even'], loop.index0) }}" id="comment-{{ comment.id }}">
             <header>
@@ -791,40 +775,40 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
     .. code-block:: bash
 
         $ php app/console assets:install web
-        
+
 ブラウザで ``http://symblog.dev/app_dev.php/2`` などのブログの show ページの１つを見てみると、以下のようにブログコメントが出力されているのが確認できるはずです。
 
 .. image:: /_static/images/part_4/comments.jpg
     :align: center
     :alt: symblog show blog comments
-    
+
 コメントの追加
 --------------
 
 この章の最後では、ユーザがブログにコメントを投稿できるようにします。コメントはブログの show ページのフォームで投稿します。問い合わせフォームを作成したときに既に Symfony2 でのフォーム作成を説明しました。手動でコメントフォームを作るのではなく、 Symfony2 のタスクで作ることができます。次のタスクを実行して ``Comment`` エンティティの ``CommentType`` クラスを生成してください。
 
 .. code-block:: bash
-    
+
     $ php app/console generate:doctrine:form BloggerBlogBundle:Comment
-    
+
 上記のように、ここでも ``Comment`` エンティティの指定にショートカットを使うことができます。
 
 .. tip::
 
     お気づきかもしれませんが、 ``doctrine:generate:form`` も使用可能です。ネームスペースが異なるだけで同じタスクを実行します。
-    
+
 フォーム生成タスクは、 ``src/Blogger/BlogBundle/Form/CommentType.php`` に次のような ``CommentType`` クラスを作成します。
 
 .. code-block:: php
 
     <?php
     // src/Blogger/BlogBundle/Form/CommentType.php
-    
+
     namespace Blogger\BlogBundle\Form;
-    
+
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilder;
-    
+
     class CommentType extends AbstractType
     {
         public function buildForm(FormBuilder $builder, array $options)
@@ -838,7 +822,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
                 ->add('blog')
             ;
         }
-    
+
         public function getName()
         {
             return 'blogger_blogbundle_commenttype';
@@ -865,7 +849,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
         requirements:
             _method:  POST
             blog_id: \d+
-        
+
 コントローラ
 ~~~~~~~~~~~~
 
@@ -875,13 +859,13 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 
     <?php
     // src/Blogger/BlogBundle/Controller/CommentController.php
-    
+
     namespace Blogger\BlogBundle\Controller;
-    
+
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Blogger\BlogBundle\Entity\Comment;
     use Blogger\BlogBundle\Form\CommentType;
-    
+
     /**
      * Comment controller.
      */
@@ -890,58 +874,58 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
         public function newAction($blog_id)
         {
             $blog = $this->getBlog($blog_id);
-            
+
             $comment = new Comment();
             $comment->setBlog($blog);
             $form   = $this->createForm(new CommentType(), $comment);
-    
+
             return $this->render('BloggerBlogBundle:Comment:form.html.twig', array(
                 'comment' => $comment,
                 'form'   => $form->createView()
             ));
         }
-    
+
         public function createAction($blog_id)
         {
             $blog = $this->getBlog($blog_id);
-            
+
             $comment  = new Comment();
             $comment->setBlog($blog);
             $request = $this->getRequest();
             $form    = $this->createForm(new CommentType(), $comment);
             $form->bindRequest($request);
-    
+
             if ($form->isValid()) {
                 // TODO: Persist the comment entity
-    
+
                 return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_show', array(
                     'id' => $comment->getBlog()->getId())) .
                     '#comment-' . $comment->getId()
                 );
             }
-    
+
             return $this->render('BloggerBlogBundle:Comment:create.html.twig', array(
                 'comment' => $comment,
                 'form'    => $form->createView()
             ));
         }
-        
+
         protected function getBlog($blog_id)
         {
             $em = $this->getDoctrine()
                         ->getEntityManager();
-    
+
             $blog = $em->getRepository('BloggerBlogBundle:Blog')->find($blog_id);
-    
+
             if (!$blog) {
                 throw $this->createNotFoundException('Unable to find Blog post.');
             }
-            
+
             return $blog;
         }
-       
+
     }
-    
+
 ``Comment`` コントローラに２つのアクションを作成しました。 ``new`` と ``create`` です。 ``new`` アクションは、コメントフォームの表示を担当し、 ``create`` アクションは、コメントフォームからのサブミット内容の処理を担当します。今回追加したコードは多いように見えますが、何も新しいものはありません。全ては、パート２の問い合わせフォームを作成したときにカバーしています。しかし、先に進む前に ``Comment`` コントローラで何が起こるのか整理してみましょう。
 
 フォームバリデーション
@@ -950,20 +934,20 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 ``user`` や ``comment`` の値が空のままブログコメントをサブミットできるようにはしたくありませんね。パート２の問い合わせフォームを作成したときに説明したバリデータを振り返ってみましょう。  ``src/Blogger/BlogBundle/Entity/Comment.php`` にある ``Comment`` エンティティを修正して、次の内容を追加してください。
 
 .. code-block:: php
-    
+
     <?php
     // src/Blogger/BlogBundle/Entity/Comment.php
-    
+
     // ..
-    
+
     use Symfony\Component\Validator\Mapping\ClassMetadata;
     use Symfony\Component\Validator\Constraints\NotBlank;
-    
+
     // ..
     class Comment
     {
         // ..
-        
+
         public static function loadValidatorMetadata(ClassMetadata $metadata)
         {
             $metadata->addPropertyConstraint('user', new NotBlank(array(
@@ -973,7 +957,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
                 'message' => 'You must enter a comment'
             )));
         }
-        
+
         // ..
     }
 
@@ -985,9 +969,9 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 次に、 ``new`` と ``create`` コントローラアクションに対応するテンプレートを作成する必要があります。まず、  ``src/Blogger/BlogBundle/Resources/views/Comment/form.html.twig`` にある ``new`` のファイルに次の内容をペーストしてください。
 
 .. code-block:: html
-    
+
     {# src/Blogger/BlogBundle/Resources/views/Comment/form.html.twig #}
-    
+
     <form action="{{ path('BloggerBlogBundle_comment_create', { 'blog_id' : comment.blog.id } ) }}" method="post" {{ form_enctype(form) }} class="blogger">
         {{ form_widget(form) }}
         <p>
@@ -1002,12 +986,12 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. code-block:: html
 
     {% extends 'BloggerBlogBundle::layout.html.twig' %}
-    
+
     {% block title %}Add Comment{% endblock%}
-    
+
     {% block body %}
         <h1>Add comment for blog post "{{ comment.blog.title }}"</h1>
-        {% include 'BloggerBlogBundle:Comment:form.html.twig' with { 'form': form } %}    
+        {% include 'BloggerBlogBundle:Comment:form.html.twig' with { 'form': form } %}
     {% endblock %}
 
 ``Comment`` コントローラの ``create`` アクションは、フォームのサブミットされた値を処理しますが、フォームがエラーになったときのため、表示も必要になります。重複を避けて ``BloggerBlogBundle:Comment:form.html.twig`` を再利用しましょう。
@@ -1017,16 +1001,16 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. code-block:: html
 
     {# src/Blogger/BlogBundle/Resources/views/Blog/show.html.twig #}
-    
+
     {# .. #}
-    
+
     {% block body %}
-    
+
         {# .. #}
-        
+
         <section class="comments" id="comments">
             {# .. #}
-            
+
             <h3>Add Comment</h3>
             {% render 'BloggerBlogBundle:Comment:new' with { 'blog_id': blog.id } %}
         </section>
@@ -1039,13 +1023,13 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. image:: /_static/images/part_4/to_string_error.jpg
     :align: center
     :alt: toString() Symfony2 Exception
-    
+
 この例外は ``BloggerBlogBundle:Blog:show.html.twig`` テンプレートによって投げられています。 ``BloggerBlogBundle:Blog:show.html.twig`` テンプレートの２５行目を見てみると、 ``BloggerBlogBundle:Comment:create`` コントローラを埋め込む処理で問題ががあることがわかります。
 
 .. code-block:: html
 
     {% render 'BloggerBlogBundle:Comment:create' with { 'blog_id': blog.id } %}
-    
+
 例外メッセージをよく見てみると、なぜ例外が投げられたのかといったことがわかります。
 
     Entities passed to the choice field must have a "__toString()" method defined
@@ -1055,7 +1039,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 パート２の内容を覚えていれば、 ``FormBuilder`` がフィールドに関するメタデータを基に出力するフィールドタイプを推測する方法について説明したと思います。 ``Comment`` と ``Blog`` エンティティ間のリレーションをセットアップしましたので、 ``FormBuilder`` は ``blog`` が ``choice`` フィールドとなり、ユーザがコメントに結びつけるブログエントリを指定することができるように推測しました。フォームに ``choice`` フィールドがあり、 Symfony2 例外が投げられたのは、そのためです。次のように ``Blog`` エントリに ``__toString()`` メソッドを実装すれば、この問題を修正することができます。
 
 .. code-block:: php
-    
+
     // src/Blogger/BlogBundle/Entity/Blog.php
     public function __toString()
     {
@@ -1065,22 +1049,22 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. tip::
 
     問題が起きた時に表示される Symfony2 のエラーメッセージの情報量はとても多くて有益です。これらの情報はデバッグを手助けしてくれるので、エラーメッセージを読んでください。また、エラーメッセージは完全なスタックトレースも提供してくれるため、エラーの原因をステップを確認することができます。
-    
+
 これでページを再読み込みすると、コメントが表示されるはずです。しかし、 ``approved``, ``created``, ``updated``, ``blog`` といったここで表示されるべきではないフィールドも出てきてしまっているのに気づくと思います。生成した ``CommentType`` クラスをまだカスタマイズしていないからです。
 
 .. tip::
 
     レンダリングされたフィールドは全て正しいフィールドのタイプで出力されているように見えます。 ``user`` フィールドは ``text`` フィールドとして、 ``comment`` フィールドは ``textarea`` として、 ``created`` と ``updated`` の ``DateTime`` フィールドは日にちと時間を指定することのできる ``select`` フィールドになります。
-    
+
     これは ``FormBuilders`` がレンダリングに必要なメンバーのフィールドのタイプを推測してくれるためです。エンティティに指定したメタデータに基づいています。 ``Comment`` エンティティのメタデータを細かく特定したので、 ``FormBuilder`` はフィールドタイプが正しく推測できました。
-    
+
 ``src/Blogger/BlogBundle/Form/CommentType.php`` のファイルを修正して必要なフィールドのみ出力するようにしましょう。
 
 .. code-block:: php
 
     <?php
     // src/Blogger/BlogBundle/Form/CommentType.php
-    
+
     // ..
     class CommentType extends AbstractType
     {
@@ -1091,7 +1075,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
                 ->add('comment')
             ;
         }
-    
+
         // ..
     }
 
@@ -1101,26 +1085,26 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 
     <?php
     // src/Blogger/BlogBundle/Controller/CommentController.php
-    
+
     // ..
     class CommentController extends Controller
     {
         public function createAction($blog_id)
         {
             // ..
-            
+
             if ($form->isValid()) {
                 $em = $this->getDoctrine()
                            ->getEntityManager();
                 $em->persist($comment);
                 $em->flush();
-                    
+
                 return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_show', array(
                     'id' => $comment->getBlog()->getId())) .
                     '#comment-' . $comment->getId()
                 );
             }
-        
+
             // ..
         }
     }
@@ -1132,11 +1116,11 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. image:: /_static/images/part_4/add_comments.jpg
     :align: center
     :alt: symblog add blog comments
-    
+
 結論
 ----
 
 この章でかなり前進しましたね。ブログサイトとして機能しはじめてきています。ホームページのベースとコメントエンティティを作成しました。ユーザはブログに対してコメントを投稿することができるようになり、また、他のユーザが投稿したコメントを参照することもできるようになりました。また、複数のフィクスチャファイル間のリファレンス方法を学びました。そして、 Doctrine 2 マイグレーションを使用し、エンティティの変更ごとにデータベースをマイグレートしました。
 
 次章では、タグクラウドと最近のコメントリストを含めたサイドバーを作成します。また、 Twig のカスタムフィルターを作成して Twig を拡張します。最後にアセットライブラリ Assetic を使用してこのブログサイトのアセットを管理してみます。
-    
+
