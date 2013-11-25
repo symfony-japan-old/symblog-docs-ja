@@ -314,7 +314,7 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
         }
 
         /**
-         * @ORM\preUpdate
+         * @ORM\PreUpdate
          */
         public function setUpdatedValue()
         {
@@ -808,11 +808,11 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
     namespace Blogger\BlogBundle\Form;
 
     use Symfony\Component\Form\AbstractType;
-    use Symfony\Component\Form\FormBuilder;
+    use Symfony\Component\Form\FormBuilderInterface;
 
     class CommentType extends AbstractType
     {
-        public function buildForm(FormBuilder $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
                 ->add('user')
@@ -894,7 +894,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
             $comment->setBlog($blog);
             $request = $this->getRequest();
             $form    = $this->createForm(new CommentType(), $comment);
-            $form->bindRequest($request);
+            $form->bind($request);
 
             if ($form->isValid()) {
                 // TODO: Persist the comment entity
@@ -1013,7 +1013,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
             {# .. #}
 
             <h3>Add Comment</h3>
-            {% render 'BloggerBlogBundle:Comment:new' with { 'blog_id': blog.id } %}
+            {{ render(controller( 'BloggerBlogBundle:Comment:new', { 'blog_id': blog.id } )) }}
         </section>
     {% endblock %}
 
@@ -1069,7 +1069,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
     // ..
     class CommentType extends AbstractType
     {
-        public function buildForm(FormBuilder $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
                 ->add('user')
