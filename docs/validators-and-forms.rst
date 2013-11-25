@@ -205,7 +205,7 @@
 
         public function getName()
         {
-            return 'contact';
+            return 'blogger_blogbundle_enquirytype';
         }
     }
 
