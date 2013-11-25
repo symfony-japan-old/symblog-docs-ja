@@ -184,7 +184,7 @@ Doctrine 2 アイコンをクリックすると、以下のように、現在の
     public function sidebarAction()
     {
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
 
         $tags = $em->getRepository('BloggerBlogBundle:Blog')
                    ->getTags();
