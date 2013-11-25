@@ -380,22 +380,20 @@ Doctrine 2 は、 ``/BlogBundle/Entity/Repository/BlogRepository.php`` に ``Blo
 Doctrine 2 マイグレーション(Migrations)
 ---------------------------------------
 
-Doctrine2 マイグレーションエクステンションとバンドルは、 Symfony2 の標準ディストリビューションでは付いてこないので、 DataFixtures エクステンションとバンドルをインストールしたときのように手動でインストールする必要があります。プロジェクトルートの ``deps`` ファイルを開いて、次のように Doctrine 2 マイグレーションとバンドルを追加してください。
+Doctrine2 マイグレーションエクステンションとバンドルは、 Symfony2 の標準ディストリビューションでは付いてこないので、 DataFixtures エクステンションとバンドルをインストールしたときのように手動でインストールする必要があります。プロジェクトルートの ``composer.json`` ファイルを開いて、次のように Doctrine 2 マイグレーションとバンドルを追加してください。
 
-.. code-block:: text
+.. code-block:: php
     
-    [doctrine-migrations]
-        git=http://github.com/doctrine/migrations.git
-
-    [DoctrineMigrationsBundle]
-        git=http://github.com/symfony/DoctrineMigrationsBundle.git
-        target=/bundles/Symfony/Bundle/DoctrineMigrationsBundle
+    "require": {
+        "doctrine/doctrine-migrations-bundle": "dev-master",
+        "doctrine/migrations": "dev-master"
+    }
 
 そして、この変更をベンダーに反映させるため、次のタスクを実行してください。
 
 .. code-block:: bash
 
-    $ php bin/vendors install
+    $ php composer.phar update
 
 このタスクを実行すると、それぞれの Github リポジトリから最新のバージョンをダウンロードして、正しい場所にインストールします。
 
@@ -410,19 +408,6 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
     DoctrineMigrationsBundle: `ダウンロード <http://github.com/symfony/DoctrineMigrationsBundle>`__
     GitHub にあるパッケージの現在のバージョンは、以下の場所に配置されます。
     ``vendor/bundles/Symfony/Bundle/DoctrineMigrationsBundle``.
-
-次に ``app/autoload.php`` ファイルを修正して新しいネームスペースを登録します。 Doctrine 2 のマイグレーションも ``Doctrine\DBAL`` ネームスペース内になるあるので、既存の ``Doctrine\DBAL`` をセットしている場所よりも上に新しいパスを指定する必要があります。ネームスペースは上から順に調べられるので、より特定しているネームスペースは、特定されていないネームスペースよりも前に登録する必要があります。
-
-.. code-block:: php
-
-    // app/autoload.php
-    // ...
-    $loader->registerNamespaces(array(
-    // ...
-    'Doctrine\\DBAL\\Migrations' => __DIR__.'/../vendor/doctrine-migrations/lib',
-    'Doctrine\\DBAL'             => __DIR__.'/../vendor/doctrine-dbal/lib',
-    // ...
-    ));
 
 次に、 ``app/AppKernel.php`` のカーネルにバンドルを登録しましょう。
 
