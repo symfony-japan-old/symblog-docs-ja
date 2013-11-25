@@ -414,7 +414,7 @@ Symfony2 は、 ``404 Not Found`` のレスポンスを生成しましたね。�
         git=http://github.com/doctrine/data-fixtures.git
 
     [DoctrineFixturesBundle]
-        git=http://github.com/symfony/DoctrineFixturesBundle.git
+        git=http://github.com/doctrine/DoctrineFixturesBundle.git
         target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
 
 次のタスクを実行して、この変更をベンダーに反映させましょう。
