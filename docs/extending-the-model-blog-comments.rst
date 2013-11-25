@@ -385,6 +385,7 @@ Doctrine2 マイグレーションエクステンションとバンドルは、 
 .. code-block:: php
 
     "require": {
+        // ...
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/migrations": "dev-master"
     }
