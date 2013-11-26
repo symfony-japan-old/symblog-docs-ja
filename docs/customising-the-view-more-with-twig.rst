@@ -881,7 +881,7 @@ Assetic ライブラリは、アセットを次のように扱います。
 
 簡単に言えば、アセットはアプリケーションが使用するスタイルシートや画像といったリソースのことです。
 
-Asseticを ``BloggerBlogBundle`` で使用するためには ``app/config/config.yml`` を以下のように修正する必要があります。
+Assetic を ``BloggerBlogBundle`` で使用するためには ``app/config/config.yml`` を以下のように修正する必要があります。
 
 .. code-block:: php
 
@@ -890,8 +890,8 @@ Asseticを ``BloggerBlogBundle`` で使用するためには ``app/config/config
         bundles:    [BloggerBlogBundle]
     # ..
 
-これは ``BloggerBlogBundle`` に限定してAsseticを使用できるようにしていますので
-新しいバンドルでAsseticを使用する場合は修正が必要です。
+これは ``BloggerBlogBundle`` に限定して Assetic を使用できるようにしていますので
+新しいバンドルで Assetic を使用する場合は修正が必要です。
 ``bundles`` の行を削除し全てのバンドルに適応することも可能です。
 
 スタイルシート
