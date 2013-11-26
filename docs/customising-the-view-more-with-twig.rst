@@ -890,7 +890,7 @@ Assetic を ``BloggerBlogBundle`` で使用するためには ``app/config/confi
         bundles:    [BloggerBlogBundle]
     # ..
 
-これは ``BloggerBlogBundle`` に限定して Assetic を使用できるようにしていますので
+これは ``BloggerBlogBundle`` に限定して Assetic を使用できるようにしています。
 新しいバンドルで Assetic を使用する場合は修正が必要です。
 ``bundles`` の行を削除し全てのバンドルに適応することも可能です。
 
