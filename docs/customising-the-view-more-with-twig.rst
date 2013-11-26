@@ -184,7 +184,7 @@ Doctrine 2 アイコンをクリックすると、以下のように、現在の
     public function sidebarAction()
     {
         $em = $this->getDoctrine()
-                   ->getEntityManager();
+                   ->getManager();
 
         $tags = $em->getRepository('BloggerBlogBundle:Blog')
                    ->getTags();
@@ -211,7 +211,7 @@ Doctrine 2 アイコンをクリックすると、以下のように、現在の
             {% for tag, weight in tags %}
                 <span class="weight-{{ weight }}">{{ tag }}</span>
             {% else %}
-                <p>There are no tags</p>
+                There are no tags
             {% endfor %}
         </p>
     </section>
@@ -357,7 +357,6 @@ Doctrine 2 アイコンをクリックすると、以下のように、現在の
                     </p>
                 </header>
                 <p>{{ comment.comment }}</p>
-                </p>
             </article>
         {% else %}
             <p>There are no recent comments</p>
@@ -881,6 +880,19 @@ Assetic ライブラリは、アセットを次のように扱います。
 `Assetic で使用できるアセットは、ロードやダンプのできるフィルターで使用できます。アセットはメタデータを持っていることもあり、フィルターで操ることができるもの、できないものがあります。`
 
 簡単に言えば、アセットはアプリケーションが使用するスタイルシートや画像といったリソースのことです。
+
+Assetic を ``BloggerBlogBundle`` で使用するためには ``app/config/config.yml`` を以下のように修正する必要があります。
+
+.. code-block:: php
+
+    # ..
+    assetic:
+        bundles:    [BloggerBlogBundle]
+    # ..
+
+これは ``BloggerBlogBundle`` に限定して Assetic を使用できるようにしています。
+新しいバンドルで Assetic を使用する場合は修正が必要です。
+``bundles`` の行を削除し全てのバンドルに適応することも可能です。
 
 スタイルシート
 ..............
